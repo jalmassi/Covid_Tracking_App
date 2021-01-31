@@ -1,5 +1,6 @@
 package com.jalmassi.covidtracker
 
+import android.graphics.RectF
 import com.robinhood.spark.SparkAdapter
 
 class  CovidSparkAdapter(private val dailyData: List<CovidData>) : SparkAdapter() {
@@ -21,4 +22,10 @@ class  CovidSparkAdapter(private val dailyData: List<CovidData>) : SparkAdapter(
 
     override fun getCount() = dailyData.size
 
+    override fun getDataBounds(): RectF {
+        val bounds = super.getDataBounds()
+        if(daysAgo != TimeScale.MAX)
+            bounds.left = count - daysAgo.numDays.toFloat()
+        return bounds
+    }
 }
