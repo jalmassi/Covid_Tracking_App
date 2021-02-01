@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.google.gson.GsonBuilder
+import com.robinhood.ticker.TickerUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -80,6 +81,9 @@ class MainActivity : AppCompatActivity() {
                 Log.i(TAG, "Update spinner with state names")
                 //update spinner with state names
                 updateSpinnerWithStateData(perStateDailyData.keys)
+                println(perStateDailyData.values)
+                println("BOTH")
+                println(perStateDailyData)
             }
 
         })
@@ -89,9 +93,18 @@ class MainActivity : AppCompatActivity() {
         val stateAbbrList = stateNames.toMutableList()
         stateAbbrList.sort() //sort states alphabetically
         stateAbbrList.add(0, ALL_STATES)
+
+        //state list added to spinner
+        spinnerSelect.attachDataSource(stateAbbrList)
+        spinnerSelect.setOnSpinnerItemSelectedListener { parent, _, position, _ ->
+            val selectedState = parent.getItemAtPosition(position).toString() //as String
+            val selectedData = perStateDailyData[selectedState] ?: nationalDailyData
+            updateDisplayWithData(selectedData)
+        }
     }
 
     private fun setupEventListener() {
+        tickerView.setCharacterLists(TickerUtils.provideNumberList())
         //add listener to user scrubbing on the chart
         sparkView.isScrubEnabled = true
         sparkView.setScrubListener { itemData ->
@@ -127,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         }
         @ColorInt val colorInt = ContextCompat.getColor(this, colourRes)
         sparkView.lineColor = colorInt
-        tvMetricLabel.setTextColor(colorInt)
+        tickerView.setTextColor(colorInt)
 
         //update graph metric
         adapter.metric = metric
@@ -156,7 +169,7 @@ class MainActivity : AppCompatActivity() {
             Metric.NEGATIVE -> covidData.negativeIncrease
             Metric.DEATH -> covidData.deathIncrease
         }
-        tvMetricLabel.text = NumberFormat.getInstance().format(numCases)
+        tickerView.text = NumberFormat.getInstance().format(numCases)
         val outputDateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.US)
         tvDateLabel.text = outputDateFormat.format(covidData.dateChecked)
     }
