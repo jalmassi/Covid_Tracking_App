@@ -100,19 +100,22 @@
             android:id="@+id/radioButtonWeek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Week" />
+            android:text="Week"
+            style="@style/CustomRadioButton"/>
 
         <RadioButton
             android:id="@+id/radioButtonMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Month" />
+            android:text="Month"
+            style="@style/CustomRadioButton"/>
 
         <RadioButton
             android:id="@+id/radioButtonMax"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Max" />
+            android:text="Max"
+            style="@style/CustomRadioButton"/>
     </RadioGroup>
 
     <TextView
